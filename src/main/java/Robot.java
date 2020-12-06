@@ -9,19 +9,27 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
-public class Robot3 implements Runnable {
+public class Robot implements Runnable {
 
-    private static final String EMAIL = "**************@gmail.com";
-    private static final String PASSWORD = "**************";
-    private static final String NOMBRE = "Nombre comprador";
-    private static final String CARD = "******************";
-    private static final String CV = "***";
-    long contador;
+    private String EMAIL;
+    private String PASSWORD;
+    private String NOMBRE;
+    private String CARD;
+    private String CV ;
+    private String URL;
+    private long contador;
 
     private Tienda tienda;
 
-    public Robot3(Tienda tienda){
+    public Robot(Tienda tienda, LectorArchivo lector, String URL){
         this.tienda=tienda;
+        this.URL = URL;
+
+        EMAIL = lector.getEMAIL();
+        PASSWORD = lector.getPASSWORD();
+        CARD = lector.getCARD();
+        CV = lector.getCV();
+        NOMBRE = lector.getNOMBRE();
     }
 
     public void run(){
@@ -29,11 +37,11 @@ public class Robot3 implements Runnable {
         WebDriver driver = new ChromeDriver();
 
         // Enlace web
-        driver.get("https://www.pccomponentes.com/gigabyte-geforce-rtx-3080-eagle-oc-10g-10gb-gddr6x");
+        driver.get(URL);
 
         // Espera para aceptar mensaje de Cookies
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        driver.findElement(By.xpath("//*[@id=\"ficha-producto\"]/div[5]/div/div/div[2]")).click();
+        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        //driver.findElement(By.xpath("//*[@id=\"ficha-producto\"]/div[5]/div/div/div[2]")).click();
 
         // Recogemos el estado del boton mediante el texto del mismo
         String estado = driver.findElement(By.xpath("//*[@id=\"btnsWishAddBuy\"]/button[3]")).getText().toUpperCase();
@@ -50,12 +58,6 @@ public class Robot3 implements Runnable {
             driver.navigate().refresh();
             contador++;
             System.out.println(contador);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                System.out.println("Sleep en Bucle");
-                e.printStackTrace();
-            }
             estado = driver.findElement(By.xpath("//*[@id=\"btnsWishAddBuy\"]/button[3]")).getText().toUpperCase();
             System.out.println(estado);
         }
@@ -90,7 +92,9 @@ public class Robot3 implements Runnable {
             driver.findElement(By.xpath("//*[@id=\"login-form\"]/button[2]")).click();
 
             // Rellenar datos tarjeta
-            WebElement tarjetaNombre = driver.findElement(By.xpath("//*[@id=\"cardform\"]/input[1]"));
+            // EN CASO DE QUE NO HAYA TARJETA YA DEFINIDA
+
+            /*WebElement tarjetaNombre = driver.findElement(By.xpath("//*[@id=\"cardform\"]/input[1]"));
             tarjetaNombre.sendKeys(NOMBRE);
             WebElement tarjetaNum = driver.findElement(By.xpath("//*[@id=\"cardform\"]/fieldset[1]/input"));
             tarjetaNum.sendKeys(CARD);
@@ -103,11 +107,12 @@ public class Robot3 implements Runnable {
             // Codigo
             driver.findElement(By.xpath("//*[@id=\"cardform\"]/fieldset[3]/div[1]/input")).sendKeys(CV);
             // Aceptar
-            driver.findElement(By.xpath("//*[@id=\"cardform\"]/input[3]")).click();
+            driver.findElement(By.xpath("//*[@id=\"cardform\"]/input[3]")).click();*/
 
             // Aceptar Condiciones de envio y facturacion
             driver.findElement(By.xpath("//*[@id=\"ticket-pago\"]/p/label/span")).click();
-            // TODO CAMBIAR SLEEP POR ESPERA
+
+            // Espera a que se reinicie el boton de compra
             try {
                 Thread.sleep(4000);
                 driver.findElement(By.xpath("//*[@id=\"ticket-pago\"]/p/label/span")).click();
@@ -115,10 +120,8 @@ public class Robot3 implements Runnable {
                 System.out.println("Sleep en zona de compra");
                 e.printStackTrace();
             }
-            /*WebDriverWait wait = new WebDriverWait(driver, 20);
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"GTM-carrito-finalizarCompra\"]")));*/
             // Realizar compra
-            driver.findElement(By.xpath("//*[@id=\"GTM-carrito-finalizarCompra\"]")).click();
+            //driver.findElement(By.xpath("//*[@id=\"GTM-carrito-finalizarCompra\"]")).click();
 
         }else{
             driver.quit();
