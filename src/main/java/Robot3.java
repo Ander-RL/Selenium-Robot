@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
-public class Robot2 implements Runnable {
+public class Robot3 implements Runnable {
 
     private static final String EMAIL = "**************@gmail.com";
     private static final String PASSWORD = "**************";
@@ -20,7 +20,7 @@ public class Robot2 implements Runnable {
 
     private Tienda tienda;
 
-    public Robot2(Tienda tienda){
+    public Robot3(Tienda tienda){
         this.tienda=tienda;
     }
 
@@ -29,7 +29,7 @@ public class Robot2 implements Runnable {
         WebDriver driver = new ChromeDriver();
 
         // Enlace web
-        driver.get("https://www.pccomponentes.com/zotac-gaming-geforce-rtx-3080-trinity-10gb-gddr6x");
+        driver.get("https://www.pccomponentes.com/gigabyte-geforce-rtx-3080-eagle-oc-10g-10gb-gddr6x");
 
         // Espera para aceptar mensaje de Cookies
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);

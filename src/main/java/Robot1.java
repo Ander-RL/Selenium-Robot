@@ -9,11 +9,12 @@ import java.util.concurrent.TimeUnit;
 
 public class Robot1 implements Runnable {
 
-    private static final String EMAIL = "Selenium3080@gmail.com";
-    private static final String PASSWORD = "rtx30802020";
-    private static final String NOMBRE = "Ander Rodriguez";
-    private static final String CARD = "*******************";
+    private static final String EMAIL = "**************@gmail.com";
+    private static final String PASSWORD = "**************";
+    private static final String NOMBRE = "Nombre comprador";
+    private static final String CARD = "******************";
     private static final String CV = "***";
+    long contador;
 
     private Tienda tienda;
 
@@ -26,9 +27,7 @@ public class Robot1 implements Runnable {
         WebDriver driver = new ChromeDriver();
 
         // Enlace web
-        //driver.get("https://www.pccomponentes.com/zotac-gaming-geforce-rtx-3080-trinity-10gb-gddr6x");
         driver.get("https://www.pccomponentes.com/gigabyte-geforce-rtx-3080-eagle-10gb-gddr6x");
-        //driver.get("https://www.pccomponentes.com/evga-geforce-rtx-3080-xc3-black-gaming-10gb-gddr6x");
 
         // Espera para aceptar mensaje de Cookies
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -45,14 +44,10 @@ public class Robot1 implements Runnable {
         double precio = Double.parseDouble(precioCaracter);
 
         // Comprobamos que el estado sea = COMPRAR si no lo es, refresca en bucle hasta que lo sea
-        while ((!estado.equals("COMPRAR") && tienda.getParar() == false) || precio > 800) {
+        while ((!estado.equals("COMPRAR") && tienda.getParar() == false) || precio > 850) {
             driver.navigate().refresh();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                System.out.println("Sleep en Bucle");
-                e.printStackTrace();
-            }
+            contador++;
+            System.out.println(contador);
             estado = driver.findElement(By.xpath("//*[@id=\"btnsWishAddBuy\"]/button[3]")).getText().toUpperCase();
             System.out.println(estado);
         }
@@ -64,6 +59,14 @@ public class Robot1 implements Runnable {
             // Espera para dar a boton comprar.
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             driver.findElement(By.xpath("//*[@id=\"btnsWishAddBuy\"]/button[3]")).click();
+
+            System.out.println(precio);
+
+            // Sonido del sistema avisando
+            for(int i = 0; i < 2; i++){
+                Toolkit.getDefaultToolkit().beep();
+            }
+
             // Espera hasta que boton realizar/proceder con pedido este cargado
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             driver.findElement(By.xpath("//*[@id=\"GTM-carrito-realizarPedidoPaso1\"]")).click();
@@ -96,8 +99,9 @@ public class Robot1 implements Runnable {
 
             // Aceptar Condiciones de envio y facturacion
             driver.findElement(By.xpath("//*[@id=\"ticket-pago\"]/p/label/span")).click();
+            // TODO CAMBIAR SLEEP POR ESPERA
             try {
-                Thread.sleep(5000);
+                Thread.sleep(4000);
                 driver.findElement(By.xpath("//*[@id=\"ticket-pago\"]/p/label/span")).click();
             } catch (InterruptedException e) {
                 System.out.println("Sleep en zona de compra");
